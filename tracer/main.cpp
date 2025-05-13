@@ -85,8 +85,10 @@ int main(int argc, char** argv) {
         label_record.pop_back();
     }
 
+    assert(cpu.labels.count("main"), "No main label found.");
+
     // Reset PC and run program!
-    cpu.pc = 0;
+    cpu.pc = cpu.labels["main"];
 
     // cout << "COMPILED INSTUCTIONS:\n";
     // for (const auto& ts : cpu.i_mem) {
@@ -99,6 +101,9 @@ int main(int argc, char** argv) {
     cpu.rf[29] = 0x7FFFFFFC;
 
     for (; cpu.pc < cpu.END_OF_PROGRAM; ++cpu.pc) {
+        for (const auto &str: cpu.i_mem[cpu.pc]) cout << str << ' ';
+        cout << endl;
+
         Hardware::lab6_branch_info branch_info = cpu.run_instruction();
         output_file << branch_info.unpack() << '\n';
     }

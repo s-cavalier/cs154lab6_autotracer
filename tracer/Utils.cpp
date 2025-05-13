@@ -179,7 +179,10 @@ Hardware::lab6_branch_info Hardware::CPU::run_instruction() {
         Utils::assert(-32768 <= tmp_imm && tmp_imm <= 32767, "Found out-of-range imm value for instr " + instr_type + " with imm value " + to_string(tmp_imm) + ".");
         BYTE arg1 = Parser::reg_name_to_index( instr[2].substr(ref_begin + 1, ref_end - ref_begin - 1) );
 
-        rf[arg0] = d_mem.at( rf[arg1] + tmp_imm );
+        WORD loc = rf[arg1] + tmp_imm;
+        if (!d_mem.count(loc)) d_mem[loc] = 0;
+
+        rf[arg0] = d_mem[ loc ];
         return ret;
     }
     if (instr_type == "sw") {
